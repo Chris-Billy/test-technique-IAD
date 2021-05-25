@@ -4,9 +4,7 @@
 header("Content-Type: application/json; charset=UTF-8");
 
 // On inclut nos class pour pouvoir y accéder
-require_once('./../../config/Database.php');
-require_once('./../../managers/ContactManager.php');
-require_once('./../../models/Contact.php');
+require_once('./../../config/init.php');
 
 // On instancie la base de données et on s'y connecte
 $database = new Database();
@@ -21,15 +19,22 @@ $contact = new Contact();
 // On récupère les données envoyées
 $datas = json_decode(file_get_contents("php://input"));
 
-// On affecte les attributs de notre contact
-$contact->hydrate($datas);
+// On vérifie les données reçues
+if (!empty($datas->id) && is_numeric($datas->id) && !empty($datas->last_name) && !empty($datas->first_name) && 
+    !empty($datas->email) && !empty($datas->address) && !empty($datas->phone) && !empty($datas->age)) {
+    // On affecte les attributs de notre contact
+    $contact->hydrate($datas);
 
-// On modifie le contact
-if ($contactManager->update($contact)) {
-    $result['message'] = "Le contact a bien été modifié";
-    echo json_encode($result);
+    // On modifie le contact
+    if ($contactManager->update($contact)) {
+        $result['message'] = "Le contact a bien été modifié";
+        echo json_encode($result);
+    } else {
+        $result['message'] = "Le contact n'a pas pu être modifié";
+        echo json_encode($result);
+    }
 } else {
-    $result['message'] = "Le contact n'a pas pu être modifié";
+    $result['message'] = "Les informations données ne sont incorrects";
     echo json_encode($result);
 }
 

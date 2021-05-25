@@ -4,8 +4,7 @@
 header("Content-Type: application/json; charset=UTF-8");
 
 // On inclut nos class pour pouvoir y accéder
-require_once('./../../config/Database.php');
-require_once('./../../managers/ContactManager.php');
+require_once('./../../config/init.php');
 
 // On instancie la base de données et on s'y connecte
 $database = new Database();
