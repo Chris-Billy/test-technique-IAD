@@ -25,7 +25,13 @@ $datas = json_decode(file_get_contents("php://input"));
 $contact->hydrate($datas);
 
 // On modifie le contact
-$contactManager->delete($contact);
+if ($contactManager->delete($contact)) {
+    $result['message'] = "Le contact a bien été supprimé";
+    echo json_encode($result);
+} else {
+    $result['message'] = "Le contact n'a pas pu être supprimé";
+    echo json_encode($result);
+}
 
 // Afficher un message de succès
 // ...

@@ -48,16 +48,27 @@ class ContactManager
     public function create($contact)
     {
         // On se connecte à la base de donnée et on prépare la requête
-        $query = $this->connection->prepare('INSERT INTO contacts (last_name, first_name, email, address, phone, age) VALUES (?, ?, ?, ?, ?, ?)');
-        // On exécute la requête avec les valeurs à affecter
-        $query->execute([
-            $contact->last_name,
-            $contact->first_name,
-            $contact->email,
-            $contact->address,
-            $contact->phone,
-            $contact->age,
-        ]);
+        $query = $this->connection->prepare('INSERT INTO contacts SET last_name = :last_name, first_name = :first_name, email = :email, address = :address, phone = :phone, age = :age');
+        // On protège contre les injections
+        $contact->last_name = htmlspecialchars($contact->last_name);
+        $contact->first_name = htmlspecialchars($contact->first_name);
+        $contact->email = htmlspecialchars($contact->email);
+        $contact->address = htmlspecialchars($contact->address);
+        $contact->phone = htmlspecialchars($contact->phone);
+        $contact->age = htmlspecialchars($contact->age);
+        // On affecte les valeurs du contact pour chaque colonne
+        $query->bindValue(':last_name', $contact->last_name);
+        $query->bindValue(':first_name', $contact->first_name);
+        $query->bindValue(':email', $contact->email);
+        $query->bindValue(':address', $contact->address);
+        $query->bindValue(':phone', $contact->phone);
+        $query->bindValue(':age', $contact->age);
+        // On exécute la requête
+        if ($query->execute()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -67,6 +78,14 @@ class ContactManager
     {
         // On se connecte à la base de donnée et on prépare la requête
         $query = $this->connection->prepare('UPDATE contacts SET last_name = :last_name, first_name = :first_name, email = :email, address = :address, phone = :phone, age = :age WHERE id = :id');
+        // On protège contre les injections
+        $contact->id = htmlspecialchars($contact->id);
+        $contact->last_name = htmlspecialchars($contact->last_name);
+        $contact->first_name = htmlspecialchars($contact->first_name);
+        $contact->email = htmlspecialchars($contact->email);
+        $contact->address = htmlspecialchars($contact->address);
+        $contact->phone = htmlspecialchars($contact->phone);
+        $contact->age = htmlspecialchars($contact->age);
         // On affecte les valeurs du contact pour chaque colonne
         $query->bindValue(':id', $contact->id);
         $query->bindValue(':last_name', $contact->last_name);
@@ -76,7 +95,11 @@ class ContactManager
         $query->bindValue(':phone', $contact->phone);
         $query->bindValue(':age', $contact->age);
         // On exécute la requête
-        $query->execute();
+        if ($query->execute()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -86,10 +109,16 @@ class ContactManager
     {
         // On se connecte à la base de donnée et on prépare la requête
         $query = $this->connection->prepare('DELETE FROM contacts WHERE id = :id');
+        // On protège contre les injections
+        $contact->id = htmlspecialchars($contact->id);
         // On affecte la valeur à l'id
         $query->bindValue(':id', $contact->id);
         // On éxécute la requête
-        $query->execute();
+        if ($query->execute()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 
