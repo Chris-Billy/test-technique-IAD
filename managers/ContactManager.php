@@ -41,6 +41,21 @@ class ContactManager
 
         return $query;
     }
+
+    public function create($contact)
+    {
+        // On se connecte à la base de donnée et on prépare la requête
+        $query = $this->connection->prepare('INSERT INTO contacts (last_name, first_name, email, address, phone, age) VALUES (?, ?, ?, ?, ?, ?)');
+        // On exécute la requête avec les valeurs à affecter
+        $query->execute([
+            $contact->last_name,
+            $contact->first_name,
+            $contact->email,
+            $contact->address,
+            $contact->phone,
+            $contact->age,
+        ]);
+    }
 }
 
 ?>
