@@ -60,6 +60,9 @@ class ContactManager
         ]);
     }
 
+    /**
+     * Méthode pour modifier un contact
+     */
     public function update($contact)
     {
         // On se connecte à la base de donnée et on prépare la requête
@@ -73,6 +76,19 @@ class ContactManager
         $query->bindValue(':phone', $contact->phone);
         $query->bindValue(':age', $contact->age);
         // On exécute la requête
+        $query->execute();
+    }
+
+    /**
+     * Méthode pour supprimer un contact
+     */
+    public function delete($contact)
+    {
+        // On se connecte à la base de donnée et on prépare la requête
+        $query = $this->connection->prepare('DELETE FROM contacts WHERE id = :id');
+        // On affecte la valeur à l'id
+        $query->bindValue(':id', $contact->id);
+        // On éxécute la requête
         $query->execute();
     }
 }
