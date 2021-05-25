@@ -24,8 +24,8 @@ $datas = json_decode(file_get_contents("php://input"));
 // On affecte les attributs de notre contact
 $contact->hydrate($datas);
 
-// On créé le contact
-$contactManager->create($contact);
+// On modifie le contact
+$contactManager->update($contact);
 
 // Afficher un message de succès
 // ...

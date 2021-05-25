@@ -42,6 +42,9 @@ class ContactManager
         return $query;
     }
 
+    /**
+     * Méthode pour créer un contact
+     */
     public function create($contact)
     {
         // On se connecte à la base de donnée et on prépare la requête
@@ -55,6 +58,22 @@ class ContactManager
             $contact->phone,
             $contact->age,
         ]);
+    }
+
+    public function update($contact)
+    {
+        // On se connecte à la base de donnée et on prépare la requête
+        $query = $this->connection->prepare('UPDATE contacts SET last_name = :last_name, first_name = :first_name, email = :email, address = :address, phone = :phone, age = :age WHERE id = :id');
+        // On affecte les valeurs du contact pour chaque colonne
+        $query->bindValue(':id', $contact->id);
+        $query->bindValue(':last_name', $contact->last_name);
+        $query->bindValue(':first_name', $contact->first_name);
+        $query->bindValue(':email', $contact->email);
+        $query->bindValue(':address', $contact->address);
+        $query->bindValue(':phone', $contact->phone);
+        $query->bindValue(':age', $contact->age);
+        // On exécute la requête
+        $query->execute();
     }
 }
 
